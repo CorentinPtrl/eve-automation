@@ -1,2 +1,54 @@
 ---
 # defaults file for dhcp
+subnets:
+  toulouse_lan:
+    sub: "10.33.31.0"
+    mask: "255.255.255.128"
+    min: "10.33.31.2"
+    max: "10.33.31.125"
+    gateway: "10.33.31.1"
+  toulouse_wifi:
+    sub: "10.33.31.128"
+    mask: "255.255.255.224"
+    min: "10.33.31.130"
+    max: "10.33.31.158"
+    gateway: "10.33.31.129"
+  toulouse_voix:
+    sub: "10.33.31.160"
+    mask: "255.255.255.224"
+    min: "10.33.31.162"
+    max: "10.33.31.188"
+    gateway: "10.33.31.161"
+  toulouse_router:
+    sub: "10.33.31.240"
+    mask: "255.255.255.240"
+    min: "10.33.31.242"
+    max: "10.33.31.253"
+    gateway: "10.33.31.161"
+  filton_lan:
+    sub: "10.33.88.0"
+    mask: "255.255.255.128"
+    min: "10.33.88.2"
+    max: "10.33.88.125"
+    gateway: "10.33.88.1"
+  filton_wifi:
+    sub: "10.33.88.128"
+    mask: "255.255.255.224"
+    min: "10.33.88.130"
+    max: "10.33.88.158"
+    gateway: "10.33.88.129"
+  filton_voix:
+    sub: "10.33.88.160"
+    mask: "255.255.255.224"
+    min: "10.33.88.162"
+    max: "10.33.88.188"
+    gateway: "10.33.88.161"
+  filton_interco_router:
+    sub: "10.33.88.240"
+    mask: "255.255.255.240"
+    min: "10.33.88.242"
+    max: "10.33.88.253"
+    gateway: "10.33.88.161"
+
+default_lease_time: "345600"
+max_lease_time: "691200"
