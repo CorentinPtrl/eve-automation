@@ -1,0 +1,14 @@
+---
+
+- name: "Debug selected hosts"
+  ansible.builtin.debug:
+    msg: "{{ selected_hosts }}"
+
+- name: "Aggregate all neighbors and add the hostnames"
+  ansible.builtin.set_fact:
+    tmp: "{{ tmp | default([]) + hostvars[item][selected_var] | map('combine', {'HOSTNAME': item}) | list }}"
+  with_items: "{{ selected_hosts }}"
+
+- name: "Set fact"
+  ansible.builtin.set_fact:
+    "{{ return_output }}": "{{ tmp }}"

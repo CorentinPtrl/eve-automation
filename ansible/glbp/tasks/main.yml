@@ -1,0 +1,47 @@
+---
+- name: Show CDP
+  include_role:
+    name: common
+    tasks_from: show_cdp
+  vars:
+    return_output: show_cdp
+  when: inventory_hostname != "localhost"
+
+#- name: Aggregate List
+#  include_role:
+#    name: common
+#    tasks_from: aggregate_list_host
+#  vars:
+#    return_output: all_neighbors
+#    management_interface: "Gig 0/0"
+#    selected_hosts: "{{ groups['ios'] }}"
+#    selected_var: show_cdp
+#  when: inventory_hostname == "localhost"
+
+- name: "Prepare Interface L2"
+  include_role:
+    name: common
+    tasks_from: prepare_interface_l2
+  vars:
+    interface: "{{ item.LOCAL_INTERFACE }}"
+  with_items: "{{ show_cdp }}"
+  when: inventory_hostname != "localhost"
+
+- name: "Set all interfaces as trunk"
+  cisco.ios.ios_l2_interfaces:
+    config:
+      - name: "{{ item.LOCAL_INTERFACE }}"
+        trunk:
+          allowed_vlans: 10-20,40
+          native_vlan: 20
+          pruning_vlans: 10,20
+          encapsulation: dot1q
+        mode: trunk
+    state: replaced
+  with_items: "{{ show_cdp }}"
+  when: inventory_hostname != "localhost"
+
+- name: "Debug"
+  ansible.builtin.debug:
+    msg: "{{ shdow_cdp }}"
+  when: inventory_hostname != "localhost"
