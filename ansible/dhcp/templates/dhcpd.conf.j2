@@ -1,5 +1,3 @@
-ddns-update-style none;
-
 default-lease-time {{ default_lease_time }};
 max-lease-time {{ max_lease_time }};
 
@@ -14,14 +12,16 @@ log-facility local7;
 # No service will be given on this subnet, but declaring it helps the
 # DHCP server to understand the network topology.
 
-#subnet 10.152.187.0 netmask 255.255.255.0 {
-#}
+subnet 192.168.5.0 netmask 255.255.255.0 {}
 
 # This is a very basic subnet declaration.
 
-{% foreach subnet in subnets %}
-subnet {{ subnet.sub }} netmask {{ subnet.mask }} {
-    range {{ subnet.min }} {{ subnet.max }};
-    option routers {{ subnet.gateway }};
+{% for subnet in subnets %}
+{% for name, details in subnet.items() %}
+subnet {{ details.sub }} netmask {{ details.mask }} {
+    range {{ details.min }} {{ details.max }};
+    option routers {{ details.gateway }};
 }
-{% endforeach %}
+
+{% endfor %}
+{% endfor %}

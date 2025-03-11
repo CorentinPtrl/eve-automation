@@ -1,2 +1,17 @@
 ---
 # tasks file for dhcp
+
+- name: Install DHCP package
+  ansible.builtin.package:
+    name: isc-dhcp-server
+    state: latest
+
+- name: Copy DHCP config
+  ansible.builtin.template:
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+
+- name: Restart DHCP service
+  ansible.builtin.service:
+    name: isc-dhcp-server
+    state: restarted
