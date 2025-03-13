@@ -1,0 +1,38 @@
+---
+
+- name: "Create VLANs"
+  cisco.ios.ios_vlans:
+    config:
+      - vlan_id: "{{ vlans[item].id }}"
+        name: "{{ item }}"
+    state: merged
+  with_items: "{{ vlans }}"
+
+- name: "Set VLAN IP"
+  cisco.ios.ios_l3_interfaces:
+    config:
+      - name: "Vlan{{ vlans[item].id}}"
+        ipv4:
+          - address: "{{ vlans[item].start_ip | ansible.utils.ipmath(groups['ios'].index(inventory_hostname) + 1) }}/{{ vlans[item].start_ip | ansible.utils.ipaddr('prefix') }}"
+  when: vlans[item].router_primary == inventory_hostname or vlans[item].router_secondary == inventory_hostname
+  with_items: "{{ vlans }}"
+
+- name: "Configure interface settings (Primary)"
+  cisco.ios.ios_config:
+    lines:
+      - "no shutdown"
+      - "glbp {{ vlans[item].id }} ip {{ vlans[item].gateway | ansible.utils.ipaddr('address') }}"
+      - "glbp {{ vlans[item].id }} preempt"
+      - "glbp {{ vlans[item].id }} priority 200"
+    parents: interface Vlan{{ vlans[item].id }}
+  when: vlans[item].router_primary == inventory_hostname
+  with_items: "{{ vlans }}"
+
+- name: "Configure interface settings (Secondary)"
+  cisco.ios.ios_config:
+    lines:
+      - "no shutdown"
+      - "glbp {{ vlans[item].id }} ip {{ vlans[item].gateway | ansible.utils.ipaddr('address') }}"
+    parents: interface Vlan{{ vlans[item].id }}
+  when: vlans[item].router_secondary == inventory_hostname
+  with_items: "{{ vlans }}"

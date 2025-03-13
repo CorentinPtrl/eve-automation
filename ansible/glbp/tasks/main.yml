@@ -7,17 +7,6 @@
     return_output: show_cdp
   when: inventory_hostname != "localhost"
 
-#- name: Aggregate List
-#  include_role:
-#    name: common
-#    tasks_from: aggregate_list_host
-#  vars:
-#    return_output: all_neighbors
-#    management_interface: "Gig 0/0"
-#    selected_hosts: "{{ groups['ios'] }}"
-#    selected_var: show_cdp
-#  when: inventory_hostname == "localhost"
-
 - name: "Prepare Interface L2"
   include_role:
     name: common
@@ -43,5 +32,9 @@
 
 - name: "Debug"
   ansible.builtin.debug:
-    msg: "{{ shdow_cdp }}"
+    msg: "{{ show_cdp }}"
+  when: inventory_hostname != "localhost"
+
+- name: "Create VLANs"
+  include_tasks: vlan.yml
   when: inventory_hostname != "localhost"

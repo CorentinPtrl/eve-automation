@@ -1,3 +1,28 @@
 ---
 # defaults file for glbp
 management_interface: "Gig 0/0"
+vlans:
+  LAN: 
+    id: 10
+    start_ip: "10.33.88.2/25"
+    gateway: "10.33.88.1/25"
+    router_primary: "Router_B"
+    router_secondary: "Router_C"
+  WIFI:
+    id: 20
+    start_ip: "10.33.88.130/27"
+    gateway: "10.33.88.129/27"
+    router_primary: "Router_B"
+    router_secondary: "Router_C"
+  VOIX:
+    id: 30
+    start_ip: "10.33.88.162/27"
+    gateway: "10.33.88.161/27"
+    router_primary: "Router_B"
+    router_secondary: "Router_C"
+  INTERCO_ROUTER:
+    id: 40
+    start_ip: "10.33.88.242/28"
+    gateway: "10.33.88.241/28"
+    router_primary: "Router_B"
+    router_secondary: "Router_C"
