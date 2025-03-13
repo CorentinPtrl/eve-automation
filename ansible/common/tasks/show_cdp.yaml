@@ -1,0 +1,10 @@
+---
+
+- name: "Run command"
+  cisco.ios.ios_command:
+    commands: show cdp neighbors
+  register: cdp_neighbors_output
+  
+- name: "Invoke parse_cli_textfsm"
+  ansible.builtin.set_fact:
+    "{{ return_output }}": "{{ cdp_neighbors_output.stdout[0] | parse_cli_textfsm(role_path + '/templates/cisco_ios_show_cdp_neighbors.textfsm') | selectattr('LOCAL_INTERFACE', 'ne', management_interface) | list }}"

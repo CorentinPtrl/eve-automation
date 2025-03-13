@@ -1,0 +1,9 @@
+---
+
+- name: "Set encapsulation"
+  cisco.ios.ios_l2_interfaces:
+    config:
+      - name: "{{ interface }}"
+        trunk:
+          encapsulation: dot1q
+    state: merged

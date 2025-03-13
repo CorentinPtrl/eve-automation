@@ -1,0 +1,3 @@
+---
+# defaults file for glbp
+management_interface: "Gig 0/0"
