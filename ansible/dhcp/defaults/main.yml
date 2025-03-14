@@ -24,7 +24,7 @@ subnets:
       mask: "255.255.255.240"
       min: "10.33.31.242"
       max: "10.33.31.253"
-      gateway: "10.33.31.161"
+      gateway: "10.33.31.241"
   - filton_lan:
       sub: "10.33.88.0"
       mask: "255.255.255.128"
@@ -48,7 +48,7 @@ subnets:
       mask: "255.255.255.240"
       min: "10.33.88.242"
       max: "10.33.88.253"
-      gateway: "10.33.88.161"
+      gateway: "10.33.88.241"
 
 default_lease_time: "345600"
 max_lease_time: "691200"
