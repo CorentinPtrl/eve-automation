@@ -1,0 +1,24 @@
+---
+# tasks file for bgp
+
+- name: "Set Interface"
+  cisco.ios.ios_l3_interfaces:
+    config:
+      - name: "{{ item }}"
+        ipv4:
+          - address: "{{ subnet | ansible.utils.ipmath(groups['ios'].index(inventory_hostname) + 1) }}/{{ subnet | ansible.utils.ipaddr('prefix') }}"
+  with_items: "{{ routers[inventory_hostname].ints }}"
+  when: inventory_hostname != "localhost"
+
+- name:
+    "Delete the configured global BGP (Note: This WILL delete the the configured
+    global BGP)"
+  cisco.ios.ios_bgp_global:
+    state: purged
+
+- name: Setup BGP
+  cisco.ios.ios_bgp_global:
+    config:
+      as_number: "{{ routers[inventory_hostname].asn }}"
+      networks: "{{ routers[inventory_hostname].networks }}"
+      neighbor: "{{ routers[inventory_hostname].neighbors }}"
