@@ -3,7 +3,7 @@
   become: yes
   gather_facts: false
   roles:
-    - role: glbp
+    - role: eigrp
   vars:
     subnet_base: "10.10.10.8"
     subnet_mask: "255.255.255.252"

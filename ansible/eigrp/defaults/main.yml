@@ -1,0 +1,16 @@
+---
+# defaults file for eigrp
+subnet: 10.33.88.240/28
+routers:
+  Router_X:
+    ints:
+      - Gig0/1
+    networks:
+      - 1.1.1.1/24
+    asn: 1
+  Router_Y:
+    ints:
+      - Gig0/1
+    networks:
+      - 2.2.2.1/24
+    asn: 2

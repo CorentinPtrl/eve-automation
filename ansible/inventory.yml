@@ -1,7 +1,6 @@
 [ios]
-Router_A ansible_host=192.168.100.61 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
-Router_B ansible_host=192.168.100.62 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
-Router_C ansible_host=192.168.100.63 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+Router_X ansible_host=192.168.100.41 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+Router_Y ansible_host=192.168.100.42 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
 
 [controler]
 localhost ansible_connection=local
