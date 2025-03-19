@@ -10,15 +10,42 @@
   with_items: "{{ routers[inventory_hostname].ints }}"
   when: inventory_hostname != "localhost"
 
+
 - name:
-    "Delete the configured global BGP (Note: This WILL delete the the configured
+    "Delete the configured global BGP (Note: This WILL delete the configured
     global BGP)"
   cisco.ios.ios_bgp_global:
     state: purged
 
-- name: Setup BGP
-  cisco.ios.ios_bgp_global:
-    config:
-      as_number: "{{ routers[inventory_hostname].asn }}"
-      networks: "{{ routers[inventory_hostname].networks }}"
-      neighbor: "{{ routers[inventory_hostname].neighbors }}"
+#- name: Setup BGP
+#  cisco.ios.ios_bgp_global:
+#    config:
+#      as_number: "{{ routers[inventory_hostname].asn }}"
+#      networks: "{{ routers[inventory_hostname].networks }}"
+#      neighbor: "{{ routers[inventory_hostname].neighbors }}"
+##      redistribute:
+##        - eigrp:
+##            as_number : "{{ routers[inventory_hostname].eigrp }}"
+#    state: merged
+
+- name: Set BGP Networks
+  cisco.ios.ios_config:
+    lines:
+      - network {{ routers[inventory_hostname].networks }}
+    parents: router bgp {{ routers[inventory_hostname].asn }}
+  when: inventory_hostname != "localhost"
+
+- name: Set BGP Neighbors
+  cisco.ios.ios_config:
+    lines:
+      - neighbor {{ item.address }} remote-as {{ item.remote_as }}
+    parents: router bgp {{ routers[inventory_hostname].asn }}
+  with_items: "{{ routers[inventory_hostname].neighbors }}"
+  when: inventory_hostname != "localhost"
+
+- name: Redistribute EIGRP
+  cisco.ios.ios_config:
+    lines:
+      - redistribute eigrp {{ routers[inventory_hostname].eigrp }}
+    parents: router bgp {{ routers[inventory_hostname].asn }}
+  when: inventory_hostname != "localhost"
