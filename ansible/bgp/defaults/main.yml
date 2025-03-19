@@ -6,20 +6,18 @@ routers:
   Router_14:
     ints:
       - Gig0/1
-    networks:
-      - address: 10.33.88.242
+    networks: 10.33.88.241
     neighbors:
-      - address: 10.33.88.243
-        description: merge neighbor
+      - address: 10.33.88.242
         remote_as: 65002
     asn: 65001
+    eigrp: 1
   Router_15:
     ints:
       - Gig0/1
-    networks:
-      - address: 10.33.88.243
+    networks: 10.33.88.242
     neighbors:
-      - address: 10.33.88.242
-        description: merge neighbor
+      - address: 10.33.88.241
         remote_as: 65001
     asn: 65002
+    eigrp: 2
