@@ -11,8 +11,6 @@ locals {
     SW2 = { top = 310, left = 510, hostname = "hostname SW2", ip = "192.168.100.41" }
     SW3 = { top = 440, left = 420, hostname = "hostname SW3", ip = "192.168.100.42" }
     SW4 = { top = 220, left = 730, hostname = "hostname SW4", ip = "192.168.100.43" }
-    OOB = { top = 120, left = 120, hostname = "hostname OOB", ip = "192.168.100.44" }
-
   }
 
   cloud = {
@@ -30,15 +28,14 @@ locals {
     { source = "R4", source_port = "Gi0/1", target = "SW4", target_port = "Gi0/0" },
     { source = "SW1", source_port = "Gi0/1", target = "SW3", target_port = "Gi0/0" },
     { source = "SW2", source_port = "Gi0/1", target = "SW3", target_port = "Gi0/1" },
-    { source = "SW4", source_port = "Gi0/1", target = "DHCP", target_port = "eth0" },
-    { source = "OOB", source_port = "Gi0/0", target = "R1", target_port = "Gi0/2" },
-    { source = "OOB", source_port = "Gi0/1", target = "R2", target_port = "Gi0/2" },
-    { source = "OOB", source_port = "Gi0/2", target = "R3", target_port = "Gi0/2" },
-    { source = "OOB", source_port = "Gi0/3", target = "R4", target_port = "Gi0/2" },
-    { source = "OOB", source_port = "Gi1/0", target = "SW1", target_port = "Gi0/2" },
-    { source = "OOB", source_port = "Gi1/1", target = "SW2", target_port = "Gi0/2" },
-    { source = "OOB", source_port = "Gi1/2", target = "SW3", target_port = "Gi0/2" },
-    { source = "OOB", source_port = "Gi1/3", target = "SW4", target_port = "Gi0/2" },
-    { source = "OOB", source_port = "Gi2/0", target = "EXT-NET", target_port = "eth0" }
+    { source = "SW4", source_port = "Gi0/1", target = "DHCP", target_port = "eth0"},
+    { source = "R1", source_port = "Gi0/2", target = "EXT-NET"},
+    { source = "R2", source_port = "Gi0/2", target = "EXT-NET"},
+    { source = "R3", source_port = "Gi0/2", target = "EXT-NET"},
+    { source = "R4", source_port = "Gi0/2", target = "EXT-NET"},
+    { source = "SW1", source_port = "Gi0/2", target = "EXT-NET"},
+    { source = "SW2", source_port = "Gi0/2", target = "EXT-NET"},
+    { source = "SW3", source_port = "Gi0/2", target = "EXT-NET"},
+    { source = "SW4", source_port = "Gi0/2", target = "EXT-NET"},
   ]
 }
