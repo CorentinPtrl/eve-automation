@@ -1,0 +1,17 @@
+${hostname}
+
+interface GigabitEthernet0/2
+ no switchport
+ ip address ${ip} 255.255.255.0
+ no shutdown
+ exit
+
+ip domain-name mydomain.com
+crypto key generate rsa modulus 2048
+ip ssh version 2
+username admin privilege 15 secret MyStrongPassword
+
+line vty 0 4
+ login local
+ transport input ssh
+ exit

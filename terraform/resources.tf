@@ -19,8 +19,10 @@ resource "eveng_node" "routers" {
   top       = each.value.top
   left      = each.value.left
   template  = "vios"
-  config    = each.value.config
-  type      = "qemu"
+  config   = templatefile("${path.module}/templates/startup_config.tftpl", {
+    hostname = each.value.hostname
+    ip = each.value.ip
+  })  type      = "qemu"
   ethernet  = 6
 }
 
@@ -31,7 +33,10 @@ resource "eveng_node" "switchs" {
   top      = each.value.top
   left     = each.value.left
   template = "viosl2"
-  config   = each.value.config
+  config   = templatefile("${path.module}/templates/startup_config.tftpl", {
+    hostname = each.value.hostname
+    ip = each.value.ip
+  })
   type     = "qemu"
   ethernet = 12
 }
