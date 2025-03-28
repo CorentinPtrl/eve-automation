@@ -13,8 +13,7 @@
     config:
       - name: "Vlan{{ vlans[item].id}}"
         ipv4:
-          - address: "{{ vlans[item].start_ip | ansible.utils.ipmath(groups['ios'].index(inventory_hostname) + 1) }}/{{ vlans[item].start_ip | ansible.utils.ipaddr('prefix') }}"
-  when: vlans[item].router_primary == inventory_hostname or vlans[item].router_secondary == inventory_hostname
+          - address: "{{ vlans[item].start_ip | ansible.utils.ipmath(groups['glbp'].index(inventory_hostname) + 1) }}/{{ vlans[item].start_ip | ansible.utils.ipaddr('prefix') }}"
   with_items: "{{ vlans }}"
 
 - name: "Configure interface settings (Primary)"

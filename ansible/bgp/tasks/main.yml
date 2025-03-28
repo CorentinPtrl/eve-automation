@@ -6,10 +6,17 @@
     config:
       - name: "{{ item }}"
         ipv4:
-          - address: "{{ subnet | ansible.utils.ipmath(groups['ios'].index(inventory_hostname) + 1) }}/{{ subnet | ansible.utils.ipaddr('prefix') }}"
+          - address: "{{ subnet | ansible.utils.ipmath(groups['bgp'].index(inventory_hostname) + 1) }}/{{ subnet | ansible.utils.ipaddr('prefix') }}"
   with_items: "{{ routers[inventory_hostname].ints }}"
   when: inventory_hostname != "localhost"
 
+- name: No shutdown
+  cisco.ios.ios_config:
+    lines:
+      - no shutdown
+    parents: interface {{ item }}
+  with_items: "{{ routers[inventory_hostname].ints }}"
+  when: inventory_hostname != "localhost"
 
 - name:
     "Delete the configured global BGP (Note: This WILL delete the configured

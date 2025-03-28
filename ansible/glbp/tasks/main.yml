@@ -14,21 +14,20 @@
   vars:
     interface: "{{ item.LOCAL_INTERFACE }}"
   with_items: "{{ show_cdp }}"
-  when: inventory_hostname != "localhost"
+  when: inventory_hostname != "localhost" and item.NEIGHBOR_NAME == "R1.mydomain.com" or item.NEIGHBOR_NAME == "R2.mydomain.com" or item.NEIGHBOR_NAME == "R3.mydomain.com"
 
 - name: "Set all interfaces as trunk"
   cisco.ios.ios_l2_interfaces:
     config:
       - name: "{{ item.LOCAL_INTERFACE }}"
         trunk:
-          allowed_vlans: 10-20,40
-          native_vlan: 20
-          pruning_vlans: 10,20
+          allowed_vlans: 310-320
+          native_vlan: 1
           encapsulation: dot1q
         mode: trunk
     state: replaced
   with_items: "{{ show_cdp }}"
-  when: inventory_hostname != "localhost"
+  when: inventory_hostname != "localhost" and item.NEIGHBOR_NAME == "R1.mydomain.com" or item.NEIGHBOR_NAME == "R2.mydomain.com" or item.NEIGHBOR_NAME == "R3.mydomain.com"
 
 - name: "Debug"
   ansible.builtin.debug:

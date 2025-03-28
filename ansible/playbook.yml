@@ -1,6 +1,83 @@
 ---
-- hosts: all
+- hosts: eigrp
   become: yes
   gather_facts: true
   roles:
-    - role: dhcp
+    - role: eigrp
+      vars:
+        routers:
+          R1:
+            ints:
+              - Gig0/0
+            networks:
+              - 10.33.31.1/25
+              - 10.33.31.129/27
+              - 10.33.31.161/27
+              - 10.33.31.241/28
+            asn: 1
+          R4:
+            ints:
+              - Gig0/0
+            networks:
+              - 10.33.88.1/25
+              - 10.33.88.129/27
+              - 10.33.88.161/27
+              - 10.33.88.241/28
+            asn: 2
+- hosts: bgp
+  become: yes
+  gather_facts: true
+  roles:
+    - role: bgp
+      vars:
+        routers:
+          R1:
+            ints:
+              - Gig0/0
+            networks: 10.33.88.241
+            neighbors:
+              - address: 10.33.88.242
+                remote_as: 65002
+            asn: 65001
+            eigrp: 1
+          R4:
+            ints:
+              - Gig0/0
+            networks: 10.33.88.242
+            neighbors:
+              - address: 10.33.88.241
+                remote_as: 65001
+            asn: 65002
+            eigrp: 2
+- hosts: glbp
+  become: yes
+  gather_facts: true
+  roles:
+    - role: glbp
+      vars:
+        management_interface: "Gig 0/2"
+        vlans:
+          LAN:
+            id: 311
+            start_ip: "10.33.31.2/25"
+            gateway: "10.33.31.1/25"
+            router_primary: "R2"
+            router_secondary: "R3"
+          WIFI:
+            id: 312
+            start_ip: "10.33.31.130/27"
+            gateway: "10.33.31.129/27"
+            router_primary: "R2"
+            router_secondary: "R3"
+          VOIX:
+            id: 313
+            start_ip: "10.33.31.162/27"
+            gateway: "10.33.31.161/27"
+            router_primary: "R2"
+            router_secondary: "R3"
+          INTERCO_ROUTER:
+            id: 314
+            start_ip: "10.33.31.242/28"
+            gateway: "10.33.31.241/28"
+            router_primary: "R2"
+            router_secondary: "R3"

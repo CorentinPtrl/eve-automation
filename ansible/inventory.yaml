@@ -1,8 +1,0 @@
-[dhcp]
-evedhcp ansible_host=192.168.100.111
-
-[dhcp:vars]
-ansible_user = ubuntu
-ansible_password = ubuntu
-ansible_connection = ssh
-ansible_sudo_pass = ubuntu
