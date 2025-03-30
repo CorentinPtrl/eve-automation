@@ -27,7 +27,9 @@ jobs:
       - name: Install Ansible and Paramiko
         run: |
           sudo apt update
-          sudo apt install -y ansible python3-paramiko
+          sudo apt install -y python3 python3-pip
+          pip install --upgrade pip
+          pip install ansible paramiko
 
       - name: Configure Ansible
         run: |
