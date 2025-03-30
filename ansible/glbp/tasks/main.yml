@@ -22,7 +22,6 @@
       - name: "{{ item.LOCAL_INTERFACE }}"
         trunk:
           allowed_vlans: 310-320
-          native_vlan: 1
           encapsulation: dot1q
         mode: trunk
     state: replaced

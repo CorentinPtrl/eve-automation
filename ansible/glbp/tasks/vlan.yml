@@ -16,6 +16,13 @@
           - address: "{{ vlans[item].start_ip | ansible.utils.ipmath(groups['glbp'].index(inventory_hostname) + 1) }}/{{ vlans[item].start_ip | ansible.utils.ipaddr('prefix') }}"
   with_items: "{{ vlans }}"
 
+- name: "Configure interface settings"
+  cisco.ios.ios_config:
+    lines:
+      - "no shutdown"
+    parents: interface Vlan{{ vlans[item].id }}
+  with_items: "{{ vlans }}"
+
 - name: "Configure interface settings (Primary)"
   cisco.ios.ios_config:
     lines:

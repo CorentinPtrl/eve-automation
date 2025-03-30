@@ -17,12 +17,17 @@
   with_items: "{{ routers[inventory_hostname].ints }}"
   when: inventory_hostname != "localhost"
 
+- name: Reset EIGRP
+  cisco.ios.ios_config:
+    lines:
+      - no router eigrp {{ routers[inventory_hostname].asn }}
+  when: inventory_hostname != "localhost"
+
 - name: Set EIGRP Networks
   cisco.ios.ios_config:
     lines:
       - network {{ item | ansible.utils.ipaddr('address') }} {{ item | ansible.utils.ipaddr('netmask') }}
     parents: router eigrp {{ routers[inventory_hostname].asn }}
-    before: "no router eigrp {{ routers[inventory_hostname].asn }}"
   with_items: "{{ routers[inventory_hostname].networks }}"
   when: inventory_hostname != "localhost"
 
