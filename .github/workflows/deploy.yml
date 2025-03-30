@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup `Tailscale`
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+          version: 1.52.0
+
+      - name: Install Ansible and Paramiko
+        run: |
+          sudo apt update
+          sudo apt install -y ansible python3-paramiko
+
+      - name: Configure Ansible
+        run: |
+          mkdir -p ~/.ansible
+          echo "[persistent_connection]" > ~/.ansible/ansible.cfg
+          echo "ssh_type = paramiko" >> ~/.ansible/ansible.cfg
+          echo "[paramiko_connection]" >> ~/.ansible/ansible.cfg
+          echo "look_for_keys = False" >> ~/.ansible/ansible.cfg
+          echo "host_key_auto_add = True" >> ~/.ansible/ansible.cfg
+          export ANSIBLE_CONFIG=~/.ansible/ansible.cfg
+
+      - name: Run Ansible Playbook
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
+        working-directory: ansible
+        run: |
+          ansible-playbook -i inventory.yml playbook.yml
+
+      - name: Notify Success
+        if: success()
+        run: echo "Deployment successful"
+
+      - name: Notify Failure
+        if: failure()
+        run: echo "Deployment failed"
