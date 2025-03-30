@@ -18,12 +18,14 @@ resource "eveng_node" "routers" {
   name      = each.key
   top       = each.value.top
   left      = each.value.left
-  template  = "vios"
+  template  = "viosl2"
   config   = templatefile("${path.module}/templates/startup_config.tftpl", {
     hostname = each.value.hostname
     ip = each.value.ip
-  })  type      = "qemu"
+  })
+  type      = "qemu"
   ethernet  = 6
+  icon = "Router-2D-Gen-White-S.svg"
 }
 
 resource "eveng_node" "switchs" {
@@ -72,4 +74,3 @@ resource "eveng_start_nodes" "start" {
   lab_path   = eveng_lab.automation.path
   depends_on = [eveng_node_link.connections_nodes, eveng_node_link.connections_network]
 }
-
