@@ -1,6 +1,17 @@
 ---
 # defaults file for glbp
 management_interface: "Gig 0/0"
+routers:
+  - Router_A
+  - Router_B
+  - Router_C
+switches:
+  Switch_A:
+    "Gig 0/1": LAN
+  Switch_B:
+    "Gig 0/1": LAN
+  Switch_C:
+    "Gig 0/1": LAN
 vlans:
   LAN: 
     id: 10

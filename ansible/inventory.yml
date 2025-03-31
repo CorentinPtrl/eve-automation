@@ -1,16 +1,22 @@
+[filton]
+EN_FLT_R1 ansible_host=192.168.100.48 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+EN_FLT_SW1 ansible_host=192.168.100.43 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+
 [bgp]
-R1 ansible_host=192.168.100.45 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
-R4 ansible_host=192.168.100.48 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+FR_TLS_R1 ansible_host=192.168.100.45 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+EN_FLT_R1 ansible_host=192.168.100.48 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
 
 [eigrp]
-R1 ansible_host=192.168.100.45 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
-R4 ansible_host=192.168.100.48 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+FR_TLS_R1 ansible_host=192.168.100.45 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+EN_FLT_R1 ansible_host=192.168.100.48 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
   
 [glbp]
-R1 ansible_host=192.168.100.45 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
-R2 ansible_host=192.168.100.46 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
-R3 ansible_host=192.168.100.47 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
-
+FR_TLS_R1 ansible_host=192.168.100.45 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+FR_TLS_CORE2 ansible_host=192.168.100.46 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+FR_TLS_CORE1 ansible_host=192.168.100.47 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+FR_TLS_DIST1 ansible_host=192.168.100.40 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+FR_TLS_DIST2 ansible_host=192.168.100.41 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
+FR_TLS_ACC ansible_host=192.168.100.42 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
 
 [controler]
 localhost ansible_connection=local

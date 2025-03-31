@@ -1,0 +1,45 @@
+---
+# tasks file for svi
+- name: Show CDP
+  include_role:
+    name: common
+    tasks_from: show_cdp
+  vars:
+    return_output: show_cdp
+  when: inventory_hostname != "localhost"
+
+- name: "Prepare Interface L2"
+  include_role:
+    name: common
+    tasks_from: prepare_interface_l2
+  vars:
+    interface: "{{ item.LOCAL_INTERFACE }}"
+  with_items: "{{ show_cdp }}"
+  when: inventory_hostname != "localhost" and (item.NEIGHBOR_NAME | replace('.mydomain.com','')) == router or (item.NEIGHBOR_NAME | replace('.mydomain.com','')) in switches
+
+- name: "Set all interfaces as trunk"
+  cisco.ios.ios_l2_interfaces:
+    config:
+      - name: "{{ item.LOCAL_INTERFACE }}"
+        trunk:
+          allowed_vlans: 1-1000
+          encapsulation: dot1q
+        mode: trunk
+    state: replaced
+  with_items: "{{ show_cdp }}"
+  when: inventory_hostname != "localhost" and (item.NEIGHBOR_NAME | replace('.mydomain.com','')) == router or (item.NEIGHBOR_NAME | replace('.mydomain.com','')) in switches
+
+- name: "Create VLANs"
+  include_tasks: vlan.yml
+  when: inventory_hostname != "localhost"
+
+- name: "Set Switches to access mode"
+  cisco.ios.ios_l2_interfaces:
+    config:
+      - name: "{{ item.key }}"
+        access:
+          vlan: "{{ vlans[item.value].id }}"
+        mode: access
+    state: replaced
+  loop: "{{ switches[inventory_hostname] | dict2items }}"
+  when: inventory_hostname in switches

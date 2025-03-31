@@ -15,6 +15,7 @@
         ipv4:
           - address: "{{ vlans[item].start_ip | ansible.utils.ipmath(groups['glbp'].index(inventory_hostname) + 1) }}/{{ vlans[item].start_ip | ansible.utils.ipaddr('prefix') }}"
   with_items: "{{ vlans }}"
+  when: inventory_hostname in routers
 
 - name: "Configure interface settings"
   cisco.ios.ios_config:
@@ -22,6 +23,15 @@
       - "no shutdown"
     parents: interface Vlan{{ vlans[item].id }}
   with_items: "{{ vlans }}"
+  when: inventory_hostname in routers
+
+- name: "Set DHCP Relay (Primary | Secondary)"
+  cisco.ios.ios_config:
+    lines:
+      - "ip helper-address {{ vlans[item].relay_dhcp }}"
+    parents: interface Vlan{{ vlans[item].id }}
+  with_items: "{{ vlans }}"
+  when: vlans[item].router_primary == inventory_hostname or vlans[item].router_secondary == inventory_hostname
 
 - name: "Configure interface settings (Primary)"
   cisco.ios.ios_config:
@@ -31,7 +41,7 @@
       - "glbp {{ vlans[item].id }} preempt"
       - "glbp {{ vlans[item].id }} priority 200"
     parents: interface Vlan{{ vlans[item].id }}
-  when: vlans[item].router_primary == inventory_hostname
+  when: vlans[item].router_primary == inventory_hostname and inventory_hostname in routers
   with_items: "{{ vlans }}"
 
 - name: "Configure interface settings (Secondary)"
@@ -40,5 +50,12 @@
       - "no shutdown"
       - "glbp {{ vlans[item].id }} ip {{ vlans[item].gateway | ansible.utils.ipaddr('address') }}"
     parents: interface Vlan{{ vlans[item].id }}
-  when: vlans[item].router_secondary == inventory_hostname
+  when: vlans[item].router_secondary == inventory_hostname and inventory_hostname in routers
   with_items: "{{ vlans }}"
+
+- name: "Set default gateway"
+  cisco.ios.ios_config:
+    lines:
+      - "ip route 0.0.0.0 0.0.0.0 10.33.31.243"
+  with_items: "{{ vlans }}"
+  when: vlans[item].router_primary == inventory_hostname or vlans[item].router_secondary == inventory_hostname and inventory_hostname in routers

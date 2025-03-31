@@ -6,7 +6,7 @@
     - role: eigrp
       vars:
         routers:
-          R1:
+          FR_TLS_R1:
             ints:
               - Gig0/0
             networks:
@@ -15,7 +15,7 @@
               - 10.33.31.162/27
               - 10.33.31.241/28
             asn: 1
-          R4:
+          EN_FLT_R1:
             ints:
               - Gig0/0
             networks:
@@ -31,7 +31,7 @@
     - role: bgp
       vars:
         routers:
-          R1:
+          FR_TLS_R1:
             ints:
               - Gig0/0
             networks: 10.33.88.241
@@ -40,7 +40,7 @@
                 remote_as: 65002
             asn: 65001
             eigrp: 1
-          R4:
+          EN_FLT_R1:
             ints:
               - Gig0/0
             networks: 10.33.88.242
@@ -56,28 +56,74 @@
     - role: glbp
       vars:
         management_interface: "Gig 0/2"
+        routers:
+          - FR_TLS_R1
+          - FR_TLS_CORE2
+          - FR_TLS_CORE1
+        switches:
+          FR_TLS_DIST1: {}
+          FR_TLS_DIST2: {}
+          FR_TLS_ACC:
+            "Gig 1/0": LAN
+            "Gig 1/1": WIFI
+            "Gig 1/2": VOIX
         vlans:
           LAN:
             id: 311
             start_ip: "10.33.31.2/25"
             gateway: "10.33.31.1/25"
-            router_primary: "R2"
-            router_secondary: "R3"
+            relay_dhcp: "10.33.88.2"
+            router_primary: "FR_TLS_CORE2"
+            router_secondary: "FR_TLS_CORE1"
           WIFI:
             id: 312
             start_ip: "10.33.31.130/27"
             gateway: "10.33.31.129/27"
-            router_primary: "R2"
-            router_secondary: "R3"
+            relay_dhcp: "10.33.88.2"
+            router_primary: "FR_TLS_CORE2"
+            router_secondary: "FR_TLS_CORE1"
           VOIX:
             id: 313
             start_ip: "10.33.31.162/27"
             gateway: "10.33.31.161/27"
-            router_primary: "R2"
-            router_secondary: "R3"
+            relay_dhcp: "10.33.88.2"
+            router_primary: "FR_TLS_CORE2"
+            router_secondary: "FR_TLS_CORE1"
           INTERCO_ROUTER:
             id: 314
             start_ip: "10.33.31.242/28"
             gateway: "10.33.31.241/28"
-            router_primary: "R2"
-            router_secondary: "R3"
+            relay_dhcp: "10.33.88.2"
+            router_primary: "FR_TLS_CORE2"
+            router_secondary: "FR_TLS_CORE1"
+- hosts: filton
+  become: yes
+  gather_facts: true
+  roles:
+    - role: svi
+      vars:
+        management_interface: "Gig 0/2"
+        router: EN_FLT_R1
+        vlans:
+          LAN: 
+            id: 10
+            gateway: "10.33.88.1/25"
+            relay_dhcp: "10.33.88.2"
+          WIFI:
+            id: 20
+            gateway: "10.33.88.129/27"
+            relay_dhcp: "10.33.88.2"
+          VOIX:
+            id: 30
+            gateway: "10.33.88.161/27"
+            relay_dhcp: "10.33.88.2"
+        switches:
+          EN_FLT_SW1:
+            "Gig 0/1": LAN
+- hosts: all
+  become: yes
+  gather_facts: true
+  roles:
+    - role: naming
+      vars:
+        management_interface: "Gig 0/2"

@@ -1,0 +1,34 @@
+---
+
+- name: "Create VLANs"
+  cisco.ios.ios_vlans:
+    config:
+      - vlan_id: "{{ vlans[item].id }}"
+        name: "{{ item }}"
+    state: merged
+  with_items: "{{ vlans }}"
+
+- name: "Set VLAN IP"
+  cisco.ios.ios_l3_interfaces:
+    config:
+      - name: "Vlan{{ vlans[item].id}}"
+        ipv4:
+          - address: "{{ vlans[item].gateway | ansible.utils.ipmath(groups['filton'].index(inventory_hostname)) }}/{{ vlans[item].gateway | ansible.utils.ipaddr('prefix') }}"
+  with_items: "{{ vlans }}"
+  when : inventory_hostname == router
+
+- name: "Set DHCP Relay"
+  cisco.ios.ios_config:
+    lines:
+      - "ip helper-address {{ vlans[item].relay_dhcp }}"
+    parents: interface Vlan{{ vlans[item].id }}
+  with_items: "{{ vlans }}"
+  when : inventory_hostname == router
+
+- name: "Configure interface settings"
+  cisco.ios.ios_config:
+    lines:
+      - "no shutdown"
+    parents: interface Vlan{{ vlans[item].id }}
+  with_items: "{{ vlans }}"
+  when : inventory_hostname == router

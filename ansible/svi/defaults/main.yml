@@ -1,0 +1,19 @@
+---
+# defaults file for svi
+router: R1
+vlans:
+  LAN: 
+    id: 10
+    gateway: "10.33.88.1/25"
+  WIFI:
+    id: 20
+    gateway: "10.33.88.129/27"
+  VOIX:
+    id: 30
+    gateway: "10.33.88.161/27"
+  INTERCO_ROUTER:
+    id: 40
+    gateway: "10.33.88.241/28"
+switches:
+  SW1:
+    "Gig 0/1": LAN

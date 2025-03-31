@@ -14,7 +14,7 @@
   vars:
     interface: "{{ item.LOCAL_INTERFACE }}"
   with_items: "{{ show_cdp }}"
-  when: inventory_hostname != "localhost" and item.NEIGHBOR_NAME == "R1.mydomain.com" or item.NEIGHBOR_NAME == "R2.mydomain.com" or item.NEIGHBOR_NAME == "R3.mydomain.com"
+  when: inventory_hostname != "localhost" and item.NEIGHBOR_NAME == "FR_TLS_R1.mydomain.com" or item.NEIGHBOR_NAME == "FR_TLS_R2.mydomain.com" or item.NEIGHBOR_NAME == "FR_TLS_R3.mydomain.com"
 
 - name: "Set all interfaces as trunk"
   cisco.ios.ios_l2_interfaces:
@@ -26,13 +26,12 @@
         mode: trunk
     state: replaced
   with_items: "{{ show_cdp }}"
-  when: inventory_hostname != "localhost" and item.NEIGHBOR_NAME == "R1.mydomain.com" or item.NEIGHBOR_NAME == "R2.mydomain.com" or item.NEIGHBOR_NAME == "R3.mydomain.com"
-
-- name: "Debug"
-  ansible.builtin.debug:
-    msg: "{{ show_cdp }}"
-  when: inventory_hostname != "localhost"
+  when: inventory_hostname != "localhost" and item.NEIGHBOR_NAME == "FR_TLS_R1.mydomain.com" or item.NEIGHBOR_NAME == "FR_TLS_R2.mydomain.com" or item.NEIGHBOR_NAME == "FR_TLS_R3.mydomain.com"
 
 - name: "Create VLANs"
   include_tasks: vlan.yml
+  when: inventory_hostname != "localhost"
+
+- name: "Interfaces Configuration"
+  include_tasks: ints.yml
   when: inventory_hostname != "localhost"

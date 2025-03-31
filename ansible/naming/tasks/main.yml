@@ -1,0 +1,24 @@
+---
+# tasks file for naming
+- name: Show CDP
+  include_role:
+    name: common
+    tasks_from: show_cdp
+  vars:
+    return_output: show_cdp
+  when: inventory_hostname != "localhost"
+
+- name: "Set description"
+  cisco.ios.ios_config:
+    lines:
+      - "description Link to {{ item.NEIGHBOR_NAME | replace('.mydomain.com','') }} ({{ item.LOCAL_INTERFACE }} -> Gig {{ item.NEIGHBOR_INTERFACE }})"
+    parents: interface {{ item.LOCAL_INTERFACE }}
+  with_items: "{{ show_cdp }}"
+  when: inventory_hostname != "localhost"
+
+- name: "Set Management Description"
+  cisco.ios.ios_config:
+    lines:
+      - "description Management Interface"
+    parents: interface {{ management_interface }}
+  when: inventory_hostname != "localhost"
