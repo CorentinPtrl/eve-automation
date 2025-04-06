@@ -108,15 +108,15 @@
         router: EN_FLT_R1
         vlans:
           LAN: 
-            id: 10
+            id: 881
             gateway: "10.33.88.1/25"
             relay_dhcp: "10.33.88.2"
           WIFI:
-            id: 20
+            id: 882
             gateway: "10.33.88.129/27"
             relay_dhcp: "10.33.88.2"
           VOIX:
-            id: 30
+            id: 883
             gateway: "10.33.88.161/27"
             relay_dhcp: "10.33.88.2"
         switches:
