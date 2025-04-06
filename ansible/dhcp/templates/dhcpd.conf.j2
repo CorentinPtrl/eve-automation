@@ -8,7 +8,14 @@ authoritative;
 # Use this to send dhcp log messages to a different log file (you also
 # have to hack syslog.conf to complete the redirection).
 log-facility local7;
-
+set vendor-string = option vendor-class-identifier;
+option ztp-file-server code 150 = { ip-address };
+option space ztp-ops;
+option ztp-ops.image-file-name code 0 = text;
+option ztp-ops.config-file-name code 1 = text;
+option ztp-ops.image-file-type code 2 = text;
+option ztp-ops.transfer-mode code 3 = text;
+option ztp-ops-encapsulation code 43 = encapsulate ztp-ops;
 # No service will be given on this subnet, but declaring it helps the
 # DHCP server to understand the network topology.
 
@@ -21,6 +28,11 @@ subnet 192.168.5.0 netmask 255.255.255.0 {}
 subnet {{ details.sub }} netmask {{ details.mask }} {
     range {{ details.min }} {{ details.max }};
     option routers {{ details.gateway }};
+    {% if details.ztp | default(false) %}
+        option ztp-file-server {{ local_ip.stdout }};
+        option ztp-ops.transfer-mode "http";
+        option ztp-ops.image-file-name "/ztp.py";
+    {% endif %}
 }
 
 {% endfor %}

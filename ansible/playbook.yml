@@ -15,6 +15,7 @@
               - 10.33.31.162/27
               - 10.33.31.241/28
             asn: 1
+            name: ynov
           EN_FLT_R1:
             ints:
               - Gig0/0
@@ -24,6 +25,7 @@
               - 10.33.88.161/27
               - 10.33.88.241/28
             asn: 2
+            name: ynov
 - hosts: bgp
   become: yes
   gather_facts: true
@@ -120,7 +122,66 @@
         switches:
           EN_FLT_SW1:
             "Gig 0/1": LAN
-- hosts: all
+- hosts: dhcp
+  become: yes
+  gather_facts: true
+  roles:
+    - role: dhcp
+      vars:
+        subnets:
+          - toulouse_lan:
+              sub: "10.33.31.0"
+              mask: "255.255.255.128"
+              min: "10.33.31.2"
+              max: "10.33.31.125"
+              gateway: "10.33.31.1"
+              ztp: true
+          - toulouse_wifi:
+              sub: "10.33.31.128"
+              mask: "255.255.255.224"
+              min: "10.33.31.130"
+              max: "10.33.31.158"
+              gateway: "10.33.31.129"
+              ztp: true
+          - toulouse_voix:
+              sub: "10.33.31.160"
+              mask: "255.255.255.224"
+              min: "10.33.31.162"
+              max: "10.33.31.188"
+              gateway: "10.33.31.161"
+              ztp: true
+          - toulouse_router:
+              sub: "10.33.31.240"
+              mask: "255.255.255.240"
+              min: "10.33.31.242"
+              max: "10.33.31.253"
+              gateway: "10.33.31.241"
+              ztp: true
+          - filton_lan:
+              sub: "10.33.88.0"
+              mask: "255.255.255.128"
+              min: "10.33.88.2"
+              max: "10.33.88.125"
+              gateway: "10.33.88.1"
+          - filton_wifi:
+              sub: "10.33.88.128"
+              mask: "255.255.255.224"
+              min: "10.33.88.130"
+              max: "10.33.88.158"
+              gateway: "10.33.88.129"
+          - filton_voix:
+              sub: "10.33.88.160"
+              mask: "255.255.255.224"
+              min: "10.33.88.162"
+              max: "10.33.88.188"
+              gateway: "10.33.88.161"
+          - filton_interco_router:
+              sub: "10.33.88.240"
+              mask: "255.255.255.240"
+              min: "10.33.88.242"
+              max: "10.33.88.253"
+              gateway: "10.33.88.241"
+- hosts: filton, bgp, eigrp, glbp
   become: yes
   gather_facts: true
   roles:

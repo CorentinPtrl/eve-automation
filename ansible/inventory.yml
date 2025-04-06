@@ -18,5 +18,8 @@ FR_TLS_DIST1 ansible_host=192.168.100.40 ansible_ssh_common_args="-o KexAlgorith
 FR_TLS_DIST2 ansible_host=192.168.100.41 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
 FR_TLS_ACC ansible_host=192.168.100.42 ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"
 
+[dhcp]
+evedhcp ansible_host=192.168.100.111 ansible_user=ubuntu ansible_password=ubuntu ansible_connection=ssh ansible_sudo_pass=ubuntu
+
 [controler]
 localhost ansible_connection=local

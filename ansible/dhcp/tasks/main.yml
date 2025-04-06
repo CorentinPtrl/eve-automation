@@ -1,10 +1,21 @@
 ---
 # tasks file for dhcp
 
+- name: Setup nginx
+  include_tasks: nginx.yaml
+
 - name: Install DHCP package
   ansible.builtin.package:
     name: isc-dhcp-server
     state: latest
+
+- name: Get Local IP
+  shell: |
+    set -o pipefail
+    ip --json addr show eth0 | jq -r '.[0].addr_info[] | select(.family == "inet") | .local'
+  args:
+    executable: /bin/bash
+  register: local_ip
 
 - name: Copy DHCP config
   ansible.builtin.template:
